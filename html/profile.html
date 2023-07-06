@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block head %}
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile-style.css') }}">
+
+{% endblock %}
+
+{% block content %}
+<div id="user-data">
+    <div id="background">
+    
+    </div>
+    <div id="user-information">
+        <div>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaxG52O3rgfrwFe4x4BIF475BWWPKOytI_1g&usqp=CAU" alt="Avatar">
+            <p>{{username}}</p>
+            <p>{{user_id}}</p>
+        </div>
+        <div>
+            <p>Dodatkowe informacje</p>
+        </div>
+    </div>
+</div>
+<div id="about-me">
+    {{about_me}}
+</div>
+<div id="comments">
+
+</div>
+{% endblock %}
