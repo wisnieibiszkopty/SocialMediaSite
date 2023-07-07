@@ -83,9 +83,6 @@ function checkImage(){
     const fileInput = document.getElementById('img');
     const selectedFiles = fileInput.files;
 
-    console.log(selectedFiles);
-    console.log(selectedFiles.length);
-
     if(selectedFiles.length > 0) return true;
     else{
         $('#register-message').html(div);
@@ -118,6 +115,5 @@ export function checkRegistration(){
     validation = checkIfPasswordAreSame();
     if(!validation) return false;
     validation = checkImage();
-    console.log(validation);
     return true;
 }

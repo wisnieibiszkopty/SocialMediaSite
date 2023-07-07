@@ -6,7 +6,7 @@ window.addEventListener('beforeunload',function(){
     css_variables.second = $('#sidebar').css('background-color');
     css_variables.text = $('main').css('color');
     css_variables.icon = $('#mode').attr('class');
-    css_json = JSON.stringify(css_variables);
+    let css_json = JSON.stringify(css_variables);
     localStorage.setItem('css_styles', css_json);
 })
 
@@ -28,6 +28,10 @@ $(document).ready(function(){
     $('#show-list').click(openNav);
     $('#cls-btn').click(closeNav);
 
+    $('.dropbtn').click(function(){
+        $('#dropdown').toggleClass('show');
+    });
+
     $("#registration-submit").click(function(){
         let validation = checkRegistration();
         if(validation){
@@ -37,10 +41,6 @@ $(document).ready(function(){
             data.email = $("#email").val();
             data.pass = $("#pass1").val();
             sendRegistrationForm(data);
-
-            const fileInput = document.querySelector('input[type="file"]');
-            const file = fileInput.files[0];
-            uploadAvatar(file);
         }
     })
 
@@ -52,6 +52,16 @@ $(document).ready(function(){
             data.pass = $("#pass").val();
             sendLoginForm(data);
         }
+    })
+
+    $("#logout").click(function(){
+        fetch('/logout')
+            .then(function(response) {
+                location.reload()
+            })
+            .catch(function(error) {
+                console.error(error);
+            });
     })
 })
 
@@ -75,30 +85,11 @@ function changeMode(){
 }
 
 function openNav(){
-    document.getElementById("sidebar").style.width = "15%";
+    document.getElementById("sidebar").style.width = "20%";
 }
 
 function closeNav(){
     document.getElementById("sidebar").style.width = "0";
-}
-
-function sendRegistrationForm(data){
-    fetch('/registration', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-      // Otrzymane dane z serwera
-      console.log(result);
-    })
-    .catch(error => {
-      // Obsługa błędów
-      console.error('Błąd:', error);
-    });
 }
 
 function sendLoginForm(data){
@@ -113,8 +104,15 @@ function sendLoginForm(data){
     .then(result => {
         console.log(result);
         if(result.status === "0"){
-            console.log("DZIAŁA!!!!");
-            //location.reload();
+            location.reload();
+        } else{
+            let loginDiv = "<div id='lg-msg' class='alert alert-danger" +
+            " alert-dismissible fade show' role='alert'></div>";
+            let button = "<button type='button' class='btn-close' " +
+            " data-bs-dismiss='alert' aria-label='Close'></button>";
+            let message = "Użytkownik o takim adresie e-mail i haśle nie istnieje!"
+            $('#login-message').html(loginDiv);
+            $('#lg-msg').html(message + button);
         }
     })
     .catch(error => {
@@ -122,17 +120,54 @@ function sendLoginForm(data){
     })
 }
 
-function uploadAvatar(file){
+function sendRegistrationForm(data){
+    fetch('/registration', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+      if(result.status === "0"){
+        const fileInput = document.querySelector('input[type="file"]');
+        const file = fileInput.files[0];
+        uploadAvatar(file, data.user_id);
+      } else{
+        console.log("Nie udało się dodać użytkownika.");
+        let div = "<div id='rg-msg' class='alert alert-danger" +
+        " alert-dismissible fade show' role='alert'></div>";
+        let button = "<button type='button' class='btn-close' " +
+        " data-bs-dismiss='alert' aria-label='Close'></button>";
+        let message = "Użytkownik o takim adresie e-mail lub identyfikatorze już istnieje!"
+        $('#register-message').html(div);
+        $('#rg-msg').html(message + button);
+      }
+    })
+    .catch(error => {
+      // Obsługa błędów
+      console.error('Błąd:', error);
+    });
+}
+
+function uploadAvatar(file, user_id){
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('user_id', user_id);
 
     fetch('/upload_avatar', {
         method: 'POST',
         body: formData
     })
-    .then(response => response.text())
+    .then(response => response.json())
     .then(result => {
-        console.log(result);
+        if(result.status === "0"){
+            console.log(result.redirect);
+            window.location.href = result.redirect;
+        } else{
+            console.log("Wystąpił problem z dodaniem zdjęcia do bazy danych");
+        }
     })
     .catch(error => {
         console.error("Błąd: ", error);

@@ -18,9 +18,20 @@
                 </ul>
                 <ul class="navbar-nav navbar-right">
                     <li><i id="mode" class="bi bi-sun"></i></li>
-                    {% if 'username' in session %}
-                    <li>Witaj, {{username}}</li>
-                    <li><button type="button" class="btn button">Wyloguj się</button></li>
+                    {% if 'user_id' in session %}
+                    <li><div id="nav-profile">
+                        <a href="{{ url_for('user_profile',user_id=session['user_id']) }}">
+                            <img id="user-avatar" class="margin-left-20" src="../static/images/avatars/avatar.png"
+                                 alt="Profil {{session['user_id']}}"></a>
+                    </div></li>
+                    <li><div id="nav-dropdown">
+                        <button class="dropbtn"><i class="bi bi-caret-down-fill"></i></button>
+                        <div id="dropdown" class="dropdown-content">
+                            <a href="#">Profil</a>
+                            <a href="#">Ustawienia</a>
+                            <a href="#" id="logout">Wyloguj się</a>
+                        </div>
+                    </div></li>
                     {% else %}
                     <li class="margin-left-20"><button type="button" class="btn button" data-bs-toggle="modal"
                          data-bs-target="#loginModal">Zaloguj się</button></li>
