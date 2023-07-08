@@ -101,7 +101,6 @@ def register_user():
         count = cursor.fetchall()
         if count[0][0] == 0:
             sql = """INSERT INTO profile (background, about_me) values (%s, %s)"""
-            # tymczasowo dodajemy jakąkolwiek nazwe żeby była, później się zrobi generowanie tła i tak dalej
             cursor.execute(sql, (filename, ""))
             sql = """SELECT COUNT(*) FROM profile"""
             cursor.execute(sql)
