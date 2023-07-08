@@ -97,8 +97,7 @@ export function checkLogin(){
     validation = checkLoginEmail();
     if(!validation) return false;
     validation = checkLoginPassword();
-    if(!validation) return false;
-    return true;
+    return validation;
 
 }
 
@@ -115,5 +114,5 @@ export function checkRegistration(){
     validation = checkIfPasswordAreSame();
     if(!validation) return false;
     validation = checkImage();
-    return true;
+    return validation;
 }

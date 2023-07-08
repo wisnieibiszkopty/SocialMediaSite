@@ -29,7 +29,16 @@ $(document).ready(function(){
     $('#cls-btn').click(closeNav);
 
     $('.dropbtn').click(function(){
-        $('#dropdown').toggleClass('show');
+        let dropdown = $('#dropdown');
+        let avatar = $('#profile-avatar');
+        dropdown.toggleClass('show');
+        if(dropdown.hasClass('show')){
+            avatar.removeClass('bi-caret-down-fill');
+            avatar.addClass('bi-caret-up-fill')
+        } else{
+            avatar.removeClass('bi-caret-up-fill');
+            avatar.addClass('bi-caret-down-fill')
+        }
     });
 
     $("#registration-submit").click(function(){

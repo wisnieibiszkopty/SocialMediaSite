@@ -57,12 +57,13 @@ main{
     width: 50px;
     height: 50px;
     border-radius: 50px;
-    border: 2px solid black;
+    border: 2px solid var(--text);
 }
 
 .dropbtn{
     text-decoration: none;
     border: none;
+    font-size: 140%;
     background-color: var(--second);
 }
 
@@ -71,12 +72,23 @@ main{
     display: inline-block;
 }
 
+#navbar-dropdown{
+    display: flex;
+    align-items: center;
+}
+
+#nav-dropdown{
+    position: relative;
+    vertical-align: middle;
+}
+
 .dropdown-content{
     display: none;
     position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    margin-right: 160px;
+    background-color: var(--main);
+    min-width: 140px;
+    top: 50px;
+    right: 0;
     overflow: hidden;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     z-index: 1;
@@ -84,11 +96,21 @@ main{
 
 .dropdown-content a{
     display: block;
+    text-decoration: none;
+    color: var(--text);
+    padding-left: 20px;
+    padding-right: 20px;
 }
+
+.dropdown-content a:hover{
+    background-color: var(--second);
+}
+
 
 .show{ display: block; }
 
-.bi-caret-down-fill{
+.bi-caret-down-fill,
+.bi-caret-up-fill{
     color: var(--text);
 }
 
@@ -287,3 +309,7 @@ input:valid{
     margin: auto;
 }
 
+footer{
+    display: flex;
+    justify-content: center;
+}
