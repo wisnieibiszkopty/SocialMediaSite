@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
+    <script src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div id="user-profile">
+    <div id="background">
+        <!-- temporary link -->
+        <img src="{{ url_for('static', filename=background) }}" alt="">
+        {% if session['user_tag'] == user_tag %}
+        <div id="settings" data-bs-toggle="modal" data-bs-target="#settingsModal">
+            <i class="bi bi-gear"></i>
+        </div>
+        {% endif %}
+    </div>
+    <div id="profile-picture">
+        <img src="{{ url_for('static', filename=filename) }}" alt="">
+        {% if session['user_tag'] == user_tag %}
+        <div data-bs-toggle="modal" data-bs-target="#settingsModal">
+            <a>Zmień zdjęcie</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<div id="user-information">
+    <div>
+        <h3>{{ username }}</h3>
+        <p id="user-id">{{ user_tag }}</p>
+    </div>
+    <div>
+        <p>Dołączył: {{ date }}</p>
+        <p>Znajomi: {{ friends}}</p>
+    </div>
+</div>
+<div id="about-me">
+    {{ about_me }}
+</div>
+<div id="comments">
+    <ul class="nav nav-tabs nav-justified">
+        <li class="nav-item">
+            <button id="comments-tab" class="nav-link active" data-bs-toggle="tab" data-bs-target="#comments-details"
+                    type="button" role="tab" aria-selected="true">Komentarze</button></li>
+        <li class="nav-item">
+            <button id="posts-tab" class="nav-link" data-bs-toggle="tab" data-bs-target="#posts-details"
+                    type="button" role="tab" aria-selected="true">Posty</button></li>
+        <li class="nav-item">
+            <button id="answears-tab" class="nav-link" data-bs-toggle="tab" data-bs-target="#answears-details"
+                    type="button" role="tab" aria-selected="true">Odpowiedzi</button></li>
+        <li class="nav-item">
+            <button id="friends-tab" class="nav-link" data-bs-toggle="tab" data-bs-target="#friends-details"
+                    type="button" role="tab" aria-selected="true">Znajomi</button></li>
+    </ul>
+    <div id="profile-bottom-content" class="tab-content">
+        <div class="tab-pane fade show active" id="comments-details" role="tabpanel" aria-labelledby="comments-tab">
+            <div>
+                <h4>Dodaj komentarz: </h2>
+                    <textarea id="add-comment" rows="5" cols="30"></textarea>
+                    <button id="create-comment" type="button" class="btn btn-primary">Dodaj komentarz</button>
+            </div>
+
+        </div>
+        <div class="tab-pane fade" id="posts-details" role="tabpanel" aria-labelledby="posts-tab">
+            Posty
+        </div>
+        <div class="tab-pane fade" id="answears-details" role="tabpanel" aria-labelledby="answears-tab">
+            Odpowiedzi
+        </div>
+        <div class="tab-pane fade" id="friends-details" role="tabpanel" aria-labelledby="friends-tab">
+            Znajomi
+        </div>
+    </div>
+</div>
+
+{% if session['user_tag'] == user_tag %}
+<div class="modal" id="settingsModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Ustawienia</h4>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+  
+        <!-- Modal body -->
+        <div class="modal-body">
+            <div id="change-about-me">
+                <p>Ustaw opis: </p><label for="about"></label>
+                <textarea id="about" name="about" rows="5" cols="30"></textarea>
+                <button id="change-about-submit" type="button">Wyślij</button>
+            </div>
+            <div id="change-avatar" class="settings">
+                <label for="img">Zmień zdjęcie profilowe: </label>
+                <input class="settings-input" type="file" id="new-avatar" name="new-avatar" accept="image/*" required>
+                <button id="change-avatar-submit" type="button">Wyślij</button>
+            </div>    
+            <div id="change-bg" class="settings">
+                <label for="bg">Zmień tło profilu: </label>
+                <input class="settings-input" type="file" id="new-bg" name="new-bg" accept="image/*" required>
+                <button id="change-bg-submit" type="button">Wyślij</button>
+            </div>
+            <div>
+                <div id="change-name" class="settings">
+
+                </div>
+                <div id="change-email" class="settings">
+
+                </div>
+                <div id="change-pass" class="settings">
+
+                </div>
+            </div>
+        </div>
+  
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          
+        </div>
+  
+      </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

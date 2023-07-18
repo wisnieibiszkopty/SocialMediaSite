@@ -21,10 +21,11 @@
                 <ul class="navbar-nav navbar-right">
                     <li><i id="mode" class="bi bi-sun"></i></li>
                     {% if 'user_id' in session %}
+                    <li>{{ session['user_tag'] }}</li>
                     <li><div id="nav-profile">
-                        <a href="{{ url_for('user_profile',user_id=session['user_id']) }}">
-                            <img id="user-avatar" class="margin-left-20" src="../static/images/avatars/avatar.png"
-                                 alt="Profil {{session['user_id']}}"></a>
+                        <a href="{{ url_for('profile.user_profile',user_id=session['user_tag']) }}">
+                            <img id="user-avatar" class="margin-left-20" src="{{ url_for('static', filename=session['avatar_path']) }}"
+                                 alt="Profil {{session['user_tag']}}"></a>
                     </div></li>
                     <li id="navbar-dropdown"><div id="nav-dropdown">
                         <button class="dropbtn"><i id="profile-avatar" class="bi bi-caret-down-fill"></i></button>

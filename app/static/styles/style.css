@@ -37,6 +37,8 @@ main{
     width: 60%;
     background-color: var(--main);
     margin: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .navbar{

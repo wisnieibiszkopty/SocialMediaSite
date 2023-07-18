@@ -3,8 +3,13 @@
 }
 
 #background{
-    height: 200px;
+    height: 400px;
     position: relative;
+}
+
+#background img{
+    width: 100%;
+    height: 100%;
 }
 
 #settings{
@@ -14,9 +19,13 @@
     font-size: 140%;
 }
 
+#settings:hover{
+    cursor: pointer;
+}
+
 #profile-picture{
     position: absolute;
-    top: 125px;
+    top: 325px;
     left: 20px;
     background-color: var(--main);
     border-radius: 100px;
@@ -55,5 +64,22 @@
 #user-information h3{ margin-bottom: 0; }
 #user-information div:nth-child(2){ margin-right: 20px;}
 #user-information div:nth-child(2) p:first-child{ margin-bottom: 0; }
-#about-me{ min-height: 100px; }
+#about-me{ min-height: 200px; }
 .nav-link, .nav-link:hover{ color: var(--main-color); }
+
+#about_me{ width: 80%; }
+
+.settings{
+    border: none;
+    color: var(--text);
+    border-bottom: none;
+}
+
+.settings label{ position: static; }
+.settings-input{ border-bottom: none;}
+
+#change-about-me p{
+    font-size: 20px;
+    margin-bottom: 6px;
+    display: block;
+}
