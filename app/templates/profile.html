@@ -55,12 +55,32 @@
     </ul>
     <div id="profile-bottom-content" class="tab-content">
         <div class="tab-pane fade show active" id="comments-details" role="tabpanel" aria-labelledby="comments-tab">
+            {% if 'user_id' in session %}
             <div>
-                <h4>Dodaj komentarz: </h2>
-                    <textarea id="add-comment" rows="5" cols="30"></textarea>
-                    <button id="create-comment" type="button" class="btn btn-primary">Dodaj komentarz</button>
+                <h4>Dodaj komentarz: </h4>
+                <label for="add-comment"></label>
+                <textarea id="add-comment" rows="5" cols="30"></textarea>
+                <button id="create-comment" type="button" class="btn btn-primary">Dodaj komentarz</button>
             </div>
-
+            {% endif %}
+            <div id="users-comments">
+                {% for comment in comments %}
+                <div id="{{ comment.comment_id }}" class="user-comment">
+                    <div><img class="comment-avatar" src="{{ url_for('static', filename=comment.avatar) }}"
+                         alt="Profil {{username}}"></div>
+                    <div>
+                        <div>
+                            <div>{{comment.username}}</div>
+                            <div>{{comment.user_id}}</div>
+                        </div>
+                        <div>{{comment.text}}</div>
+                    </div>
+                    {% if session['user_tag'] == user_tag or session['user_tag'] == comment.user_id %}
+                        <div><button class="delete-comment"><i class="bi bi-x-lg"></i></button></div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
         </div>
         <div class="tab-pane fade" id="posts-details" role="tabpanel" aria-labelledby="posts-tab">
             Posty

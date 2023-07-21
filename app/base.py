@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, session, jsonify, url_for, redirect, current_app
 from app.DatabaseConnector import UseDatabase, ConnectionError, CredentialsError, SQLError
 import app.utils as utl
+from app.utils import Post
 
 bp = Blueprint('base', __name__)
 
@@ -13,21 +14,25 @@ def not_found(e):
 @bp.route('/')
 @bp.route('/home')
 def home_page():
-    if 'username' in session:
-        username = session['username']
-    else:
-        username = ""
-    return render_template("index.html", username=username)
+    try:
+        with UseDatabase(current_app.config['dbconfig']) as cursor:
+            sql = """SELECT user.user_id, user.username, user.usertag, user.avatar, post.post_id, post.title, post.date FROM post
+            INNER JOIN user ON post.user_id=user.user_id ORDER BY post.date DESC"""
+            cursor.execute(sql)
+            posts_data = cursor.fetchall()
+            posts = []
+            for post in posts_data:
+                posts.append(Post(post[0], post[1], post[2], post[3], post[4], post[5], post[6]))
+
+    except SQLError as err:
+        print(err)
+
+    return render_template("index.html", posts=posts)
 
 
 @bp.route('/groups/<group_id>')
 def group_page(group_id):
     return 'Znajdujesz się na stronie grupy ' + group_id
-
-
-@bp.route('/post/<post_id>')
-def show_post(post_id):
-    return 'Post ' + post_id
 
 
 @bp.route('/login', methods=['POST'])
@@ -63,28 +68,31 @@ def register_user():
     hash_password = utl.hash_password(password)
     filename = utl.hash_image_name(usertag)
 
-    with UseDatabase(current_app.config['dbconfig']) as cursor:
-        sql = """SELECT COUNT(*) FROM user WHERE usertag = %s OR email = %s"""
-        cursor.execute(sql, (usertag, email))
-        count = cursor.fetchall()
-        if count[0][0] == 0:
-            sql = """INSERT INTO profile (background, about_me) values (%s, %s)"""
-            cursor.execute(sql, (filename, ""))
-            sql = """SELECT COUNT(*) FROM profile"""
-            cursor.execute(sql)
-            profile_id = cursor.fetchall()[0][0]
+    try:
+        with UseDatabase(current_app.config['dbconfig']) as cursor:
+            sql = """SELECT COUNT(*) FROM user WHERE usertag = %s OR email = %s"""
+            cursor.execute(sql, (usertag, email))
+            count = cursor.fetchall()
+            if count[0][0] == 0:
+                sql = """INSERT INTO profile (background, about_me, join_date) values (%s, %s, %s)"""
+                cursor.execute(sql, (filename, "", utl.get_date()))
+                sql = """SELECT COUNT(*) FROM profile"""
+                cursor.execute(sql)
+                profile_id = cursor.fetchall()[0][0]
+                print(profile_id)
 
-            sql = """INSERT INTO user (usertag, username, email, password, avatar, profile_id)
-            VALUES (%s, %s, %s, %s, %s, %s)"""
-            cursor.execute(sql, (usertag, username, email, hash_password, filename, profile_id))
-            session['user_id'] = usertag
-            print("Dodano użytkownika do bazy danych")
-
-            result = {"status": "0"}
-        else:
-            print("Nie udało się dodać użytkownika")
-            result = {"status": "1"}
-
+                sql = """INSERT INTO user (usertag, username, email, password, avatar, profile_id)
+                VALUES (%s, %s, %s, %s, %s, %s)"""
+                cursor.execute(sql, (usertag, username, email, hash_password, filename, profile_id))
+                session['user_id'] = usertag
+                print("Dodano użytkownika do bazy danych")
+                result = {"status": "0"}
+            else:
+                print("Nie udało się dodać użytkownika")
+                result = {"status": "1"}
+    except SQLError as err:
+        print(err)
+        result = {"status": "1"}
     return jsonify(result)
 
 

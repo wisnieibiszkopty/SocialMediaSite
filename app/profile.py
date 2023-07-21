@@ -5,20 +5,41 @@ import app.utils as utl
 bp = Blueprint('profile', __name__, url_prefix='/profile')
 
 
+"""
+to do:
+- komentarze do komentarzy na profilu
+- możliwość dawania łapek w górę itd.
+- godzina dodania komentarza
+"""
+
+
 @bp.route('/<user_id>')
 def user_profile(user_id):
     with UseDatabase(current_app.config['dbconfig']) as cursor:
-        sql = """SELECT user.username, user.join_date, user.avatar, profile.about_me FROM user 
+        sql = """SELECT user.user_id, user.username, profile.join_date, user.avatar, profile.about_me FROM user 
         inner join profile on profile.profile_id=user.profile_id WHERE usertag = %s"""
         cursor.execute(sql, (user_id,))
         data = cursor.fetchall()
         if data:
-            username = data[0][0]
-            join_date = data[0][1]
-            avatar = data[0][2]
-            about_me = data[0][3]
+            profile_id = data[0][0]
+            username = data[0][1]
+            join_date = data[0][2]
+            avatar = data[0][3]
+            about_me = data[0][4]
             filename = "/images/avatars/" + avatar
             background = "/images/backgrounds/" + avatar
+
+            sql = """select profile_comment.comment_id, user.usertag, user.username, user.avatar,
+                     profile_comment.comment from profile_comment 
+                     inner join user on user.user_id = profile_comment.user_id
+                     where profile_comment.profile_id = %s"""
+            cursor.execute(sql, (profile_id,))
+            comments = cursor.fetchall()
+
+            comments_obj = []
+
+            for comment in comments:
+                comments_obj.append(utl.map_to_object(comment))
 
             return render_template("profile.html", title="Profil " + username,
                                    username=username,
@@ -27,7 +48,8 @@ def user_profile(user_id):
                                    friends=0,
                                    about_me=about_me,
                                    filename=filename,
-                                   background=background)
+                                   background=background,
+                                   comments=comments_obj)
         else:
             return redirect("404.html", 404)
 
@@ -76,16 +98,54 @@ def add_comment():
     comment = data['text']
     user_tag = data['user_tag']
     user_id = session['user_id']
-
+    print("comment: " + str(comment) + " usertag: " + str(user_tag) + " user_id: " + str(user_id))
     try:
         with UseDatabase(current_app.config['dbconfig']) as cursor:
             sql = """select user_id from user where usertag = %s"""
             cursor.execute(sql, (user_tag, ))
             profile_id = cursor.fetchall()
-            sql = """insert into profile_comment (user_id, comment, profile_id) values %s %s %s"""
-            cursor.execute(sql, (user_id, comment, profile_id))
+            print(profile_id[0][0])
+            sql = """insert into profile_comment (user_id, comment, profile_id) values (%s, %s, %s)"""
+            cursor.execute(sql, (user_id, comment, profile_id[0][0]))
 
-    except SQLError:
+    except SQLError as err:
+        print(err)
         return jsonify({"status": "1"})
 
     return jsonify({"status": "0"})
+
+
+@bp.route('/delete-comment', methods=['POST'])
+def delete_comment():
+    comment_id = request.json
+    print(comment_id)
+    if comment_id:
+        try:
+            with UseDatabase(current_app.config['dbconfig']) as cursor:
+                sql = """DELETE FROM profile_comment WHERE comment_id = %s"""
+                cursor.execute(sql, (comment_id,))
+                return jsonify({"status": "0",
+                                "id": comment_id})
+        except SQLError as err:
+            print(err)
+            return jsonify({"status": "1"})
+    else:
+        return jsonify({"status": "1"})
+
+
+# not working yet
+@bp.route('/get-posts/<usertag>', methods=['POST'])
+def show_posts(usertag):
+    print(usertag)
+    try:
+        with UseDatabase(current_app.config['dbconfig']) as cursor:
+            user_id = session['user_id']
+            sql = """select * from post where user_id = %s"""
+            cursor.execute(sql, (user_id,))
+            data = cursor.fetchall()
+            print(data)
+            return jsonify({"status": "0",
+                            "data": data})
+    except SQLError as err:
+        print(err)
+        return jsonify({"status": "1"})

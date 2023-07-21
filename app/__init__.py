@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from . import base, profile
+from . import base, profile, post
 
 
 def create_app(test_config=None):
@@ -24,5 +24,6 @@ def create_app(test_config=None):
 
     app.register_blueprint(base.bp)
     app.register_blueprint(profile.bp)
+    app.register_blueprint(post.bp)
 
     return app

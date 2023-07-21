@@ -72,6 +72,8 @@ $(document).ready(function(){
                 console.error(error);
             });
     })
+
+    $("#add-post-submit").click(addPost);
 })
 
 function changeMode(){
@@ -181,4 +183,53 @@ function uploadAvatar(file, user_id){
     .catch(error => {
         console.error("Błąd: ", error);
     });
+}
+
+function addPost(){
+    let post = {};
+    post.title = $('#post-title').val();
+    post.content = $('#post-content').val();
+
+    let fileInput = document.getElementById("post-img");
+    let file = fileInput.files;
+    post.hasFile = file.length > 0;
+    console.log(post.hasFile);
+    console.log(fileInput.files[0]);
+
+    let video_link = $('#add-video').val();
+    post.video_link = convertYoutubeUrl(video_link);
+
+    // nie ma zdjęcia, sprawdź dlaczego
+    fetch('/post/create-post', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', },
+        body: JSON.stringify(post)
+    })
+        .then(response => response.json())
+        .then(result => {
+            console.log(result.status);
+            if(result.status === "0"){
+                const formData = new FormData();
+                console.log(result.post_id);
+                formData.append('post_id', result.post_id);
+                formData.append('file', fileInput.files[0]);
+                if(post.hasFile){
+                    fetch('/post/add-image',{
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log(result.status);
+                        if(result.status === "0") window.location.href = result.redirect;                        
+                    })
+                    .catch(error => { console.error("Błąd: ", error); });
+                } 
+            } else if(result.status === "1") window.location.href = result.redirect;  
+        })
+        .catch(error => { console.error("Błąd: ", error); });
+}
+
+function convertYoutubeUrl(url){
+    return url.slice(32, 43);
 }

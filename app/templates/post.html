@@ -1,11 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends 'base.html' %}
+{% block head %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='scripts/post.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <div><img src="{{ url_for('static', filename=avatar) }}" alt="Profil {{ username }}"></div>
+        <div>
+            <p>{{ username }}</p>
+            <p>{{ usertag }}</p>
+            <p>{{ date }}</p>
+        </div>
+    </div>
+    <h1>{{ post_title }}</h1>
+    <div>
+        <p>{{ content }}</p>
+        <div><img id="post-image" src="{{ url_for('static', filename=image) }}"></div>
+        <div id="yt-player">{{ video | safe }}</div>
+    </div>
+    <div id="post-answears">
+
+    </div>
+
+{% endblock %}

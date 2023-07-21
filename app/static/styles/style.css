@@ -12,6 +12,8 @@
     border: 1px solid var(--text);
 }
 
+textarea{ resize: none; }
+
 .button:hover{
     background-color: var(--main-color);
 }
@@ -146,6 +148,8 @@ main{
     font-size: 130%;
     padding: 5px 15px 5px 15px;
     border-radius: 30px;
+    text-decoration: none;
+    color: var(--text);
 }
 
 .sidebar-element a:hover{
@@ -213,9 +217,9 @@ main{
     align-items: center;
   }
 
-  .centered-form input[type="text"],
-  .centered-form input[type="email"],
-  .centered-form input[type="password"]{
+.centered-form input[type="text"],
+.centered-form input[type="email"],
+.centered-form input[type="password"]{
     width: 300px;
     padding: 10px;
     margin-bottom: 10px;
@@ -225,14 +229,14 @@ main{
     position: relative;
 }
 
-input{
+.login-form input{
     border: 0;
     border-bottom: 1px solid var(--text);
     background-color: var(--main);
     outline: none;
 }
 
-label{
+.login-form label{
     position: absolute;
     top: 0;
     left: 0;
@@ -242,29 +246,29 @@ label{
     transition: 0.3s ease-in;
 }
 
-input, label{
+.login-form input, label{
     font-size: 20px;
     height: 55px;
     color: var(--text);
 }
 
-input:focus + label,
-input:valid + label{
+.login-form input:focus + label,
+.login-form input:valid + label{
     font-size: 80%;
     top: -25px;
     pointer-events: none;
     
 }
 
-input:focus + label{ color: var(--alert); }
-input:valid + label{ color: var(--main-color); }
+.login-form input:focus + label{ color: var(--alert); }
+.login-form input:valid + label{ color: var(--main-color); }
 
-input:focus{
+.login-form input:focus{
     border-bottom: 2px solid var(--alert);
     color: var(--alert);
 }
 
-input:valid{
+.login-form input:valid{
    border-bottom: 2px solid var(--main-color);
    color: var(--main-color);
 }
