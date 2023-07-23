@@ -17,7 +17,7 @@ def home_page():
     try:
         with UseDatabase(current_app.config['dbconfig']) as cursor:
             sql = """SELECT user.user_id, user.username, user.usertag, user.avatar, post.post_id, post.title, post.date FROM post
-            INNER JOIN user ON post.user_id=user.user_id ORDER BY post.date DESC"""
+            INNER JOIN user ON post.user_id=user.user_id ORDER BY post.date DESC LIMIT 10"""
             cursor.execute(sql)
             posts_data = cursor.fetchall()
             posts = []

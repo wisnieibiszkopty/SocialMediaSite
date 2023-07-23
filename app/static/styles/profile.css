@@ -1,6 +1,4 @@
-#user-profile{
-    position: relative;
-}
+#user-profile{ position: relative; }
 
 #background{
     height: 400px;
@@ -19,9 +17,7 @@
     font-size: 140%;
 }
 
-#settings:hover{
-    cursor: pointer;
-}
+#settings:hover{ cursor: pointer; }
 
 #profile-picture{
     position: absolute;
@@ -67,12 +63,15 @@
 #about-me{ min-height: 200px; }
 .nav-link, .nav-link:hover{ color: var(--main-color); }
 
-#about_me{ width: 80%; }
+#about-me{
+    text-align: justify;
+    vertical-align: center;
+    margin: 20px;
+}
 
 .settings{
-    border: none;
     color: var(--text);
-    border-bottom: none;
+    border-style: none;
 }
 
 .settings label{ position: static; }
@@ -84,14 +83,30 @@
     display: block;
 }
 
-.user-comment{
+#add-comment-section{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
-.comment-avatar{
-    width: 75px;
-    height: 75px;
+#add-comment-section textarea{
+    width: 80%;
+    margin: 0 auto;
+}
+
+#create-comment{
+    width: 30%;
+    margin: 20px auto;
+}
+
+h4{ margin: 20px 0 30px 20px; }
+
+#users-comments{
+    margin-top: 50px;
+}
+
+.user-info{
+    display: flex;
+    flex-direction: row;
 }
 
 .delete-comment{
@@ -103,4 +118,10 @@
 
 .delete-comment:hover{ color: red; }
 
-
+.user-post a{
+    text-decoration: none;
+    color: var(--text);
+    font-size: 150%;
+    margin: 30px 0;
+    border-bottom: 1px solid var(--text);
+}

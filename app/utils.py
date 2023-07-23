@@ -70,6 +70,15 @@ class Post:
         self.date = date
 
 
+class Answear:
+    def __init__(self, text, user_id, username, usertag, avatar):
+        self.text = text
+        self.user_id = user_id
+        self.username = username
+        self.usertag = usertag
+        self.avatar = "images/avatars/" + str(avatar)
+
+
 def create_youtube_player(link):
     return """<iframe
     width = '560'

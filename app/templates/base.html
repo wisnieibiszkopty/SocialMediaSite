@@ -16,15 +16,15 @@
         <nav class="navbar navbar-expand-sm">
             <div class="container-fluid">
                 <ul class="navbar-nav">
-                  <li><a>Witaj</a></li>
+                  <li><a href="/home">Witaj</a></li>
                 </ul>
                 <ul class="navbar-nav navbar-right">
                     <li><i id="mode" class="bi bi-sun"></i></li>
                     {% if 'user_id' in session %}
-                    <li>{{ session['user_tag'] }}</li>
+                    <li id="hello-wrap"><p id="hello">Witaj, {{ session['user_tag'] }}</p></li>
                     <li><div id="nav-profile">
                         <a href="{{ url_for('profile.user_profile',user_id=session['user_tag']) }}">
-                            <img id="user-avatar" class="margin-left-20" src="{{ url_for('static', filename=session['avatar_path']) }}"
+                            <img id="user-avatar" src="{{ url_for('static', filename=session['avatar_path']) }}"
                                  alt="Profil {{session['user_tag']}}"></a>
                     </div></li>
                     <li id="navbar-dropdown"><div id="nav-dropdown">

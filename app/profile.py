@@ -134,14 +134,16 @@ def delete_comment():
 
 
 # not working yet
-@bp.route('/get-posts/<usertag>', methods=['POST'])
-def show_posts(usertag):
-    print(usertag)
+@bp.route('/get-posts', methods=['POST'])
+def get_posts():
+    data = request.json
+    usertag = data['usertag']
     try:
         with UseDatabase(current_app.config['dbconfig']) as cursor:
-            user_id = session['user_id']
-            sql = """select * from post where user_id = %s"""
-            cursor.execute(sql, (user_id,))
+            sql = """SELECT post.title, post.post_id, post.user_id FROM post
+            INNER JOIN user ON user.user_id = post.user_id
+            WHERE user.usertag = %s"""
+            cursor.execute(sql, (usertag,))
             data = cursor.fetchall()
             print(data)
             return jsonify({"status": "0",

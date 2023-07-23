@@ -2,17 +2,56 @@
     --main: #1f1f1f;
     --second: #181818;
     --text: #ffffff;
+    --content: #282828;
     --main-color: #974dae;
     --dark-color: #3c1f46;
     --alert: #c30101;
+    --usertag: grey;
+
+}
+
+.avatar{
+    width: 75px;
+    height: 75px;
+    border-radius: 100px;
+    border: 2px solid var(--text);
+    margin: 0 20px;
+}
+
+.avatar:hover{cursor: pointer; }
+
+.username{
+    color: var(--text);
+    font-size: 110%;
+    text-decoration: none;
+}
+
+.username:hover, .usertag:hover{
+    cursor: pointer;
+    color: var(--main-color);
+    text-decoration: underline;
+}
+
+.usertag{
+    color: var(--usertag);
+    font-size: 90%;
+    text-decoration: none;
 }
 
 .button{
     color: var(--text);
-    border: 1px solid var(--text);
+    background-color: var(--main-color);
 }
 
-textarea{ resize: none; }
+textarea{
+    resize: none;
+    background-color: var(--main);
+    color: var(--text);
+    border: 2px solid var(--text);
+    border-radius: 10px;
+}
+
+textarea:focus{ border: 2px solid var(--main-color); }
 
 .button:hover{
     background-color: var(--main-color);
@@ -48,6 +87,14 @@ main{
     padding-bottom: 12px;
     z-index: 2;
 }
+
+#hello-wrap{
+    display: flex;
+    align-items: center;
+    margin-left: 40px;
+    margin-right: 10px;
+}
+#hello{margin: 0;}
 
 .margin-left-12{margin-left: 12px;}
 .margin-left-20{margin-left: 60px;}
@@ -319,3 +366,27 @@ footer{
     display: flex;
     justify-content: center;
 }
+
+.user-comment{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 50px;
+}
+
+.comment-user{
+    display: flex;
+    flex-direction: row;
+}
+
+.comment-content{
+    margin-left: 40px;
+    margin-top: 20px;
+}
+
+.delete-comment-containter{
+    display: flex;
+    align-items: center;
+}
+
+.delete-comment:hover{ color: var(--alert); }

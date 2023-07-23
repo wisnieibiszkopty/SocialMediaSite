@@ -1,5 +1,22 @@
 import { checkRegistration, checkLogin } from "./validation.js";
 
+export function fetchAPI(url, data, func){
+    fetch(url, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: data
+    })
+    .then(response => response.json())
+    .then(result => {
+        func(result);
+    })
+    .catch(error => {
+        console.error("Błąd: ", error);
+    })
+}
+
 window.addEventListener('beforeunload',function(){
     let css_variables = {};
     css_variables.main = $('main').css('background-color');
@@ -53,15 +70,7 @@ $(document).ready(function(){
         }
     })
 
-    $("#login-submit").click(function(){
-        let validation = checkLogin();
-        if(validation){
-            let data = {}
-            data.email = $("#login-email").val();
-            data.pass = $("#pass").val();
-            sendLoginForm(data);
-        }
-    })
+    $("#login-submit").click(loginSubmit);
 
     $("#logout").click(function(){
         fetch('/logout')
@@ -75,6 +84,16 @@ $(document).ready(function(){
 
     $("#add-post-submit").click(addPost);
 })
+
+function loginSubmit(){
+    let validation = checkLogin();
+    if(validation){
+        let data = {}
+        data.email = $("#login-email").val();
+        data.pass = $("#pass").val();
+        sendLoginForm(data);
+    }
+}
 
 function changeMode(){
     let root = document.querySelector(':root');
@@ -102,6 +121,10 @@ function openNav(){
 function closeNav(){
     document.getElementById("sidebar").style.width = "0";
 }
+
+document.getElementById("loginModal").addEventListener("keydown", (e) => {
+    if(e.key === "Enter"){ loginSubmit(); }
+})
 
 function sendLoginForm(data){
     fetch('/login', {

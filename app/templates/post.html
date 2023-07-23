@@ -1,26 +1,72 @@
 {% extends 'base.html' %}
 {% block head %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='scripts/post.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/post.css') }}">
+    <script src="{{ url_for('static', filename='scripts/post.js') }}" type="module"></script>
 {% endblock %}
 
 {% block content %}
-    <div>
-        <div><img src="{{ url_for('static', filename=avatar) }}" alt="Profil {{ username }}"></div>
+    <div id="user-information">
         <div>
-            <p>{{ username }}</p>
-            <p>{{ usertag }}</p>
-            <p>{{ date }}</p>
+            <img class="avatar" src="{{ url_for('static', filename=avatar) }}" alt="Profil {{ username }}">
+        </div>
+        <div id="user-data">
+            <div>
+                <p class="username">{{ username }}</p>
+                <p class="usertag">{{ usertag }}</p>
+            </div>
+            <div><p>{{ date }}</p></div>
         </div>
     </div>
-    <h1>{{ post_title }}</h1>
-    <div>
-        <p>{{ content }}</p>
-        <div><img id="post-image" src="{{ url_for('static', filename=image) }}"></div>
-        <div id="yt-player">{{ video | safe }}</div>
-    </div>
-    <div id="post-answears">
+    <article>
+        <h1>{{ post_title }}</h1>
+        <div>
+            <p>{{ content }}</p>
+            <div id="post-image">
+                <img src="{{ url_for('static', filename=image) }}" alt="">
+            </div>
+            <div id="yt-player">{{ video | safe }}</div>
+        </div>
+        <div class="post-icons">
+            <button id="add-upvote"><i class="bi bi-hand-thumbs-up"> {{ upvotes }}</i></button>
+            <button id="add-dwonvote"><i class="bi bi-hand-thumbs-down"> {{ downvotes }}</i></button>
+            <button id="add-heart"><i class="bi bi-heart"> {{ hearts }}</i></button>
+            <button><i class="bi bi-chat-right"> {{ comments }}</i></button>
+        </div>
+    </article>
 
+    {% if 'user_id' in session %}
+    <div id="add-answear">
+        <label for="answear-text"></label>
+        <textarea id="answear-text" placeholder="Napisz odpowiedź..." rows="5" cols="30"></textarea>
+        <button id="answear-btn" class="btn button">Dodaj odpowiedź</button>
+    </div>    
+    {% endif %}
+    <div id="post-answears">
+        {% for answear in answears %}
+        <div id="{{ answear.answear_id }}" class="user-comment">
+            <div>
+                <div class="comment-user">
+                    <div>
+                        <img class="avatar" src="{{ url_for('static', filename=answear.avatar) }}"
+                             alt="Profil {{answear.username}}">
+                    </div>
+                    <div>
+                        <div>
+                            <div class="username">{{answear.username}}</div>
+                            <div class="usertag">{{answear.usertag}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-content">{{answear.text}}</div>
+            </div>
+            {% if session['user_tag'] == user_tag or session['user_tag'] == answear.user_id %}
+                <div class="delete-comment-containter">
+                    <button class="delete-comment"><i class="bi bi-x-lg"></i></button>
+                </div>
+            {% endif %}
+        </div>
+        {% endfor %}
     </div>
 
 {% endblock %}

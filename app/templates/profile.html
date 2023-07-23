@@ -2,7 +2,7 @@
 {% block head %}
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
-    <script src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/profile.js') }}" type="module"></script>
 {% endblock %}
 
 {% block content %}
@@ -36,7 +36,7 @@
     </div>
 </div>
 <div id="about-me">
-    {{ about_me }}
+    <p>{{ about_me }}</p>
 </div>
 <div id="comments">
     <ul class="nav nav-tabs nav-justified">
@@ -56,34 +56,46 @@
     <div id="profile-bottom-content" class="tab-content">
         <div class="tab-pane fade show active" id="comments-details" role="tabpanel" aria-labelledby="comments-tab">
             {% if 'user_id' in session %}
-            <div>
+            <div id="add-comment-section">
                 <h4>Dodaj komentarz: </h4>
-                <label for="add-comment"></label>
-                <textarea id="add-comment" rows="5" cols="30"></textarea>
-                <button id="create-comment" type="button" class="btn btn-primary">Dodaj komentarz</button>
+                <textarea id="add-comment" rows="5" cols="30" placeholder="Napisz komentarz..."></textarea>
+                <button id="create-comment" type="button" class="btn button">Dodaj komentarz</button>
             </div>
             {% endif %}
             <div id="users-comments">
-                {% for comment in comments %}
+            {% for comment in comments %}
                 <div id="{{ comment.comment_id }}" class="user-comment">
-                    <div><img class="comment-avatar" src="{{ url_for('static', filename=comment.avatar) }}"
-                         alt="Profil {{username}}"></div>
                     <div>
-                        <div>
-                            <div>{{comment.username}}</div>
-                            <div>{{comment.user_id}}</div>
+                        <div class="comment-user">
+                            <div>
+                                <a href="{{ url_for('profile.user_profile', user_id=comment.user_id) }}">
+                                    <img class="avatar" src="{{ url_for('static', filename=comment.avatar) }}"
+                                      alt="Profil {{username}}"></a>
+                            </div>
+                            <div>
+                                <div>
+                                    <div>
+                                        <a class="username" href="{{ url_for('profile.user_profile', user_id=comment.user_id) }}">{{comment.username}}</a>
+                                    </div>
+                                    <div>
+                                        <a class="usertag" href="{{ url_for('profile.user_profile', user_id=comment.user_id) }}">{{comment.user_id}}</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div>{{comment.text}}</div>
+                        <div class="comment-content">{{comment.text}}</div>
                     </div>
                     {% if session['user_tag'] == user_tag or session['user_tag'] == comment.user_id %}
-                        <div><button class="delete-comment"><i class="bi bi-x-lg"></i></button></div>
+                    <div class="delete-comment-containter">
+                        <button class="delete-comment"><i class="bi bi-x-lg"></i></button>
+                    </div>
                     {% endif %}
                 </div>
-                {% endfor %}
+            {% endfor %}
             </div>
         </div>
         <div class="tab-pane fade" id="posts-details" role="tabpanel" aria-labelledby="posts-tab">
-            Posty
+            
         </div>
         <div class="tab-pane fade" id="answears-details" role="tabpanel" aria-labelledby="answears-tab">
             Odpowiedzi
@@ -113,12 +125,12 @@
                 <button id="change-about-submit" type="button">Wyślij</button>
             </div>
             <div id="change-avatar" class="settings">
-                <label for="img">Zmień zdjęcie profilowe: </label>
+                <label for="new-avatar">Zmień zdjęcie profilowe: </label>
                 <input class="settings-input" type="file" id="new-avatar" name="new-avatar" accept="image/*" required>
                 <button id="change-avatar-submit" type="button">Wyślij</button>
             </div>    
             <div id="change-bg" class="settings">
-                <label for="bg">Zmień tło profilu: </label>
+                <label for="new-bg">Zmień tło profilu: </label>
                 <input class="settings-input" type="file" id="new-bg" name="new-bg" accept="image/*" required>
                 <button id="change-bg-submit" type="button">Wyślij</button>
             </div>
@@ -130,6 +142,9 @@
 
                 </div>
                 <div id="change-pass" class="settings">
+
+                </div>
+                <div id="change-main-color">
 
                 </div>
             </div>

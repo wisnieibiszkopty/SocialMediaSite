@@ -8,17 +8,35 @@
     <div id="posts">
         {% for post in posts %}
             <div class="post">
-                <div>
-                    <a href="{{ url_for('profile.user_profile', user_id=post.usertag) }}"><img src="{{ url_for('static', filename=post.avatar) }}"></a>
-                    <div>
-                        <p>{{ post.username }}</p>
-                        <p>{{ post.date }}</p>
+                <div class="post-user">
+                    <div class="post-user-info">
+                        <a href="{{ url_for('profile.user_profile', user_id=post.usertag) }}">
+                            <img class="avatar" src="{{ url_for('static', filename=post.avatar) }}">
+                        </a>
+                        <div>
+                            <a class="post-username" href="{{ url_for('profile.user_profile', user_id=post.usertag) }}">
+                                {{ post.username }}
+                            </a>
+                        </div>
                     </div>
+                    <div>{{ post.date }}</div>
                 </div>
-                <div>
-                    <a href="{{ url_for('post.view_post', user_id=post.user_id, post_id=post.post_id) }}">{{ post.title }}</a>
+                <div class="post-title-wrap">
+                    <a class="post-title" href="{{ url_for('post.view_post', user_id=post.user_id, post_id=post.post_id) }}">
+                        {{ post.title }}
+                    </a>
+                </div>
+                <div class="post-icons-wrapper">
+                    <div class="post-icons">
+                        <i class="bi bi-hand-thumbs-up"> {{ upvotes }}</i>
+                        <i class="bi bi-hand-thumbs-down"> {{ downvotes }}</i>
+                        <i class="bi bi-heart"> {{ hearts }}</i>
+                        <i class="bi bi-chat-right"> {{ comments }}</i>
+                    </div>
                 </div>
             </div>
         {% endfor%}
     </div>
+
+    <script src="{{ url_for('static', filename='scripts/index.js') }}"></script>
 {% endblock %}

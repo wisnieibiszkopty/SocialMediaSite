@@ -1,9 +1,11 @@
+import { fetchAPI } from "./script.js";
+
 $(document).ready(function(){
     $('#change-about-submit').click(function(){
         let user_id = $('#user-id').text();
         let text = $('#about').val();
         console.log(text);
-        data = {};
+        let data = {};
         data.user_id = user_id;
         data.text = text;
         fetchAPI('edit-about', JSON.stringify(data), changeAbout);
@@ -33,42 +35,19 @@ $(document).ready(function(){
     $('#posts-tab').click(function(){
         const user_tag = $('#user-id').text();
         console.log(user_tag);
-        fetchApiWithoutData('get-posts/' + user_tag, getPosts);
+        let data = {};
+        data.usertag = user_tag;
+        fetchAPI('get-posts', JSON.stringify(data), getPosts);
     });
     //$('#answears-tab').click(getAnswears);
     //$('#friends-tab').click(getFriends);
 })
 
-function fetchAPI(url, data, func){
-    fetch(url, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: data
-    })
-    .then(response => response.json())
-    .then(result => {
-        func(result);
-    })
-    .catch(error => {
-        console.error("Błąd: ", error);
-    })
-}
-
-function fetchApiWithoutData(url, func){
-    fetch(url)
-        .then((response) => response.json())
-        .then(result => {
-            func(result);
-        })
-        .catch(error => {
-            console.error("Błąd: ", error);
-        })
-}
-
 function changeAbout(result){
-    if(result.status === "0") location.reload();
+    if(result.status === "0"){
+        location.reload();
+        $('#about').val('');
+    }
     else console.log("Nie udało się zmienić opisu.");
 }
 
@@ -113,7 +92,10 @@ function changeBackground(){
 }
 
 function addComment(result){
-    if(result.status === "0") location.reload();
+    if(result.status === "0") {
+        location.reload();
+        $("#add-comment").val('');
+    }
 }
 
 function deleteComment(result){
@@ -124,8 +106,18 @@ function deleteComment(result){
 }
 
 function getPosts(result){
-    console.log("get posts");
     console.log(result.data);
+    let div;
+    let a;
+    for(let i=0; i<result.data.length;i++){
+        div = document.createElement('div');
+        div.classList.add('user-post');
+        a = document.createElement('a');
+        a.setAttribute('href', '/post/' + result.data[i][2] + '/' + result.data[i][1]);
+        a.innerText += result.data[i][0];
+        div.appendChild(a);
+        $('#posts-details').append(div);
+    }
 }
 
 function getAnswears(result){
